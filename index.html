@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Qemal Papraniku — Electrical Engineering</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#1b1d23;--bg2:#22252c;--surface:#282b33;--surface2:#2f333c;
+    --border:#3a3e48;--text:#e8eaf0;--text2:#9a9eb0;
+    --blue:#4a90d9;--blue2:#5ba0ec;--blueglow:rgba(74,144,217,.15);
+  }
+  html{scroll-behavior:smooth}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.65;overflow-x:hidden}
+
+  nav{position:fixed;top:0;width:100%;z-index:100;padding:.8rem 3rem;display:flex;justify-content:space-between;align-items:center;background:rgba(27,29,35,.7);backdrop-filter:blur(20px);border-bottom:1px solid transparent;transition:all .4s}
+  nav.scrolled{border-bottom-color:var(--border);background:rgba(27,29,35,.95)}
+  nav .logo{font-family:'Space Mono',monospace;font-weight:700;font-size:1rem;color:var(--text)}
+  nav .logo span{color:var(--blue)}
+  nav ul{display:flex;list-style:none;gap:2.2rem}
+  nav ul a{color:var(--text2);text-decoration:none;font-size:.78rem;font-weight:500;transition:color .3s;letter-spacing:.4px;text-transform:uppercase}
+  nav ul a:hover{color:var(--blue2)}
+
+  .r{opacity:0;transition:all .85s cubic-bezier(.23,1,.32,1)}
+  .r.v{opacity:1}
+  .r-up{transform:translateY(50px)}.r-up.v{transform:none}
+  .r-right{transform:translateX(40px)}.r-right.v{transform:none}
+  .r-scale{transform:scale(.93)}.r-scale.v{transform:none}
+  .d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.28s}.d4{transition-delay:.36s}
+
+  /* HERO */
+  .hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;position:relative;overflow:hidden}
+  .hero-left{display:flex;flex-direction:column;justify-content:center;padding:6rem 4rem 4rem 5rem;position:relative;z-index:2;background:linear-gradient(135deg,var(--bg) 0%,var(--bg2) 100%)}
+  .hero-left .pill{display:inline-block;padding:.35rem .9rem;border:1px solid var(--blue);border-radius:50px;font-size:.68rem;color:var(--blue);font-weight:600;letter-spacing:.6px;margin-bottom:1.5rem;width:fit-content}
+  .hero-left h1{font-size:clamp(2.4rem,4.5vw,3.8rem);font-weight:700;letter-spacing:-1.5px;line-height:1.05;margin-bottom:.8rem}
+  .hero-left h1 span{color:var(--blue)}
+  .hero-left .sub{font-size:.95rem;color:var(--text2);margin-bottom:1.2rem}
+  .hero-left p{font-size:.9rem;color:var(--text2);max-width:420px;line-height:1.85;margin-bottom:2.2rem}
+  .hero-btns{display:flex;gap:.8rem}
+  .btn{padding:.72rem 1.7rem;border-radius:8px;font-size:.85rem;font-weight:600;text-decoration:none;transition:all .3s;cursor:pointer;border:none;font-family:inherit}
+  .btn-primary{background:var(--blue);color:#fff}
+  .btn-primary:hover{background:var(--blue2);transform:translateY(-2px);box-shadow:0 8px 28px rgba(74,144,217,.25)}
+  .btn-ghost{background:transparent;color:var(--text);border:1.5px solid var(--border)}
+  .btn-ghost:hover{border-color:var(--blue)}
+
+  .hero-right{position:relative;overflow:hidden;background:var(--surface)}
+  .hero-slideshow{position:absolute;inset:0}
+  .hero-slide{position:absolute;inset:0;opacity:0;transition:opacity 1.2s ease}
+  .hero-slide.active{opacity:1}
+  .hero-slide img{width:100%;height:100%;object-fit:cover;object-position:center top}
+  .hero-right .photo-overlay{position:absolute;inset:0;background:linear-gradient(to right,var(--bg) 0%,transparent 30%),linear-gradient(to top,rgba(27,29,35,.4) 0%,transparent 40%);pointer-events:none;z-index:2}
+  .hero-dots{position:absolute;bottom:1.5rem;left:50%;transform:translateX(-50%);display:flex;gap:.5rem;z-index:3}
+  .hero-dots button{width:8px;height:8px;border-radius:50%;border:none;background:rgba(255,255,255,.3);cursor:pointer;transition:all .3s;padding:0}
+  .hero-dots button.active{background:var(--blue);transform:scale(1.3)}
+  .hero-stripe{position:absolute;bottom:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--blue),var(--blue2),transparent);z-index:3}
+
+  section{padding:5.5rem 2rem}
+  .stag{font-size:.65rem;text-transform:uppercase;letter-spacing:2.5px;color:var(--blue);font-weight:700;margin-bottom:.4rem}
+  .stitle{font-size:1.85rem;font-weight:700;letter-spacing:-.8px;margin-bottom:.3rem}
+  .sdesc{color:var(--text2);font-size:.88rem;max-width:480px;margin-bottom:2.5rem}
+  .container{max-width:960px;margin:0 auto}
+  .alt{background:var(--bg2)}
+  .line-accent{width:50px;height:3px;background:linear-gradient(90deg,var(--blue),var(--blue2));border-radius:2px;margin:1rem 0 1.5rem}
+
+  .about-grid{display:grid;grid-template-columns:1.4fr .6fr;gap:3rem;align-items:start}
+  .about-text p{color:var(--text2);margin-bottom:1rem;font-size:.9rem;line-height:1.85}
+  .chips{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.2rem}
+  .chip{padding:.3rem .7rem;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:.72rem;color:var(--text2);font-weight:500}
+  .chip b{color:var(--text);font-weight:600}
+  .stats{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+  .stat{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.3rem;text-align:center;transition:all .35s}
+  .stat:hover{border-color:var(--blue);box-shadow:0 4px 20px var(--blueglow)}
+  .stat .n{font-size:1.7rem;font-weight:700;color:var(--blue)}
+  .stat .l{font-size:.65rem;color:var(--text2);text-transform:uppercase;letter-spacing:1.2px;margin-top:.2rem}
+
+  .skills-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.2rem}
+  .sk{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.6rem;transition:all .4s}
+  .sk:hover{border-color:var(--blue);transform:translateY(-3px);box-shadow:0 12px 36px rgba(74,144,217,.08)}
+  .sk h3{font-size:.93rem;margin-bottom:.4rem;font-weight:600}
+  .sk p{font-size:.82rem;color:var(--text2);line-height:1.75}
+  .sk-tags{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.8rem}
+  .sk-tags span{padding:.2rem .5rem;background:var(--bg);border:1px solid var(--border);border-radius:5px;font-size:.67rem;color:var(--text2);font-family:'Space Mono',monospace}
+
+  /* EXPERIENCE — redesigned */
+  .tl-item{display:grid;grid-template-columns:160px 1fr;gap:2.5rem;padding-bottom:2.5rem;position:relative}
+  .tl-item:not(:last-child)::after{content:'';position:absolute;left:159px;top:0;bottom:0;width:1px;background:var(--border)}
+  .tl-date{font-family:'Space Mono',monospace;font-size:.68rem;color:var(--text2);padding-top:.3rem;text-align:right;line-height:1.6;padding-right:1.2rem}
+  .tl-body{position:relative;padding-left:1.5rem}
+  .tl-body::before{content:'';position:absolute;left:-5.5px;top:.45rem;width:10px;height:10px;border-radius:50%;background:var(--blue);border:3px solid var(--bg);z-index:1}
+  .alt .tl-body::before{border-color:var(--bg2)}
+  .tl-body h3{font-size:1rem;font-weight:600;margin-bottom:.15rem}
+  .tl-body .co{color:var(--blue);font-size:.84rem;font-weight:500;margin-bottom:.5rem}
+  .tl-body p{color:var(--text2);font-size:.82rem;line-height:1.8}
+  .tl-content{display:flex;gap:1.2rem;align-items:flex-start}
+  .tl-text{flex:1}
+  .tl-img-sq{flex-shrink:0;width:260px;height:260px;border-radius:12px;overflow:hidden;border:1px solid var(--border);background:var(--surface2);display:flex;align-items:center;justify-content:center;margin-top:.2rem}
+
+  /* Copy popup */
+  .copy-popup{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:2rem 2.5rem;z-index:200;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.4)}
+  .copy-popup.show{display:block}
+  .copy-popup .pop-label{font-size:.7rem;text-transform:uppercase;letter-spacing:2px;color:var(--blue);font-weight:700;margin-bottom:.8rem}
+  .copy-popup .pop-value{font-family:'Space Mono',monospace;font-size:1.05rem;color:var(--text);margin-bottom:1.2rem;user-select:all}
+  .copy-popup button{padding:.55rem 1.4rem;border-radius:8px;border:none;background:var(--blue);color:#fff;font-size:.82rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .3s}
+  .copy-popup button:hover{background:var(--blue2)}
+  .copy-popup .pop-close{position:absolute;top:.8rem;right:1rem;background:none;border:none;color:var(--text2);font-size:1.2rem;cursor:pointer;padding:0}
+  .copy-popup .pop-close:hover{color:var(--text)}
+  .copy-popup .copied{font-size:.72rem;color:var(--blue);margin-top:.6rem;opacity:0;transition:opacity .3s}
+  .copy-popup .copied.show{opacity:1}
+  .copy-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:199}
+  .copy-overlay.show{display:block}
+  .tl-img-sq img{width:100%;height:100%;object-fit:cover}
+  .tl-img-sq .ph{display:flex;flex-direction:column;align-items:center;gap:.3rem;color:var(--text2);font-size:.65rem;text-align:center}
+  .tl-img-sq .ph span{font-size:1.2rem}
+
+  /* PROJECTS — 4:3 images */
+  .proj-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.3rem}
+  .proj{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:all .4s}
+  .proj:hover{transform:translateY(-5px);box-shadow:0 16px 48px rgba(74,144,217,.08);border-color:var(--blue)}
+  .proj-carousel{width:100%;aspect-ratio:4/3;position:relative;overflow:hidden;background:var(--surface2)}
+  .proj-carousel .slide{position:absolute;inset:0;opacity:0;transition:opacity .4s ease;display:flex;align-items:center;justify-content:center}
+  .proj-carousel .slide.active{opacity:1}
+  .proj-carousel .slide img{width:100%;height:100%;object-fit:cover}
+  .proj-carousel .slide-label{position:absolute;bottom:0;left:0;right:0;padding:.5rem .8rem;background:linear-gradient(to top,rgba(0,0,0,.7),transparent);font-size:.7rem;color:#fff;font-weight:500;opacity:0;transition:opacity .3s}
+  .proj:hover .slide-label{opacity:1}
+  .proj-arrows{position:absolute;inset:0;display:flex;align-items:center;justify-content:space-between;padding:0 .6rem;opacity:0;transition:opacity .3s;z-index:2;pointer-events:none}
+  .proj:hover .proj-arrows{opacity:1}
+  .proj-arrows button{width:32px;height:32px;border-radius:50%;border:none;background:rgba(0,0,0,.55);color:#fff;font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;pointer-events:auto;backdrop-filter:blur(4px)}
+  .proj-arrows button:hover{background:var(--blue);transform:scale(1.1)}
+  .proj-dots{position:absolute;bottom:.5rem;left:50%;transform:translateX(-50%);display:flex;gap:.4rem;z-index:2;opacity:0;transition:opacity .3s}
+  .proj:hover .proj-dots{opacity:1}
+  .proj-dots span{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.35);transition:all .3s}
+  .proj-dots span.active{background:#fff;transform:scale(1.25)}
+  .proj-body{padding:1.4rem}
+  .proj-body h3{font-size:.93rem;margin-bottom:.4rem;font-weight:600}
+  .proj-body p{font-size:.8rem;color:var(--text2);line-height:1.75;margin-bottom:.8rem}
+  .proj-tags{display:flex;flex-wrap:wrap;gap:.3rem}
+  .proj-tags span{padding:.18rem .5rem;background:var(--blueglow);border:1px solid rgba(74,144,217,.2);border-radius:5px;font-size:.65rem;color:var(--blue2);font-family:'Space Mono',monospace}
+
+  .proj-single{width:100%;aspect-ratio:4/3;position:relative;overflow:hidden;background:var(--surface2);display:flex;align-items:center;justify-content:center}
+  .proj-single img{width:100%;height:100%;object-fit:cover}
+  .proj-single .ph{display:flex;flex-direction:column;align-items:center;gap:.3rem;color:var(--text2);font-size:.7rem}
+  .proj-single .ph span{font-size:2rem}
+
+  .edu-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.3rem}
+  .edu{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem;transition:all .3s}
+  .edu:hover{border-color:var(--blue)}
+  .edu .t{font-size:.6rem;text-transform:uppercase;letter-spacing:2px;color:var(--blue);font-weight:700;margin-bottom:.4rem}
+  .edu h3{font-size:.93rem;font-weight:600;margin-bottom:.15rem}
+  .edu .s{color:var(--blue);font-size:.82rem;margin-bottom:.2rem}
+  .edu .d{font-size:.72rem;color:var(--text2)}
+  .edu .ex{margin-top:.5rem;font-size:.74rem;color:var(--text2);line-height:1.7}
+
+  /* INVOLVEMENT — 4:3 images, all have image slots */
+  .inv-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.3rem}
+  .inv{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:all .35s}
+  .inv:hover{border-color:var(--blue);transform:translateY(-3px);box-shadow:0 8px 28px rgba(74,144,217,.06)}
+  .inv-img{width:100%;aspect-ratio:4/3;background:var(--surface2);display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .inv-img img{width:100%;height:100%;object-fit:cover}
+  .inv-img .ph{display:flex;flex-direction:column;align-items:center;gap:.3rem;color:var(--text2);font-size:.62rem;text-align:center}
+  .inv-img .ph span{font-size:1.5rem}
+  .inv-body{padding:1rem;text-align:center}
+  .inv-body h3{font-size:.8rem;font-weight:600;margin-bottom:.2rem}
+  .inv-body p{font-size:.66rem;color:var(--text2)}
+
+  .contact-section{text-align:center;padding:5rem 2rem}
+  .contact-section p{color:var(--text2);max-width:420px;margin:0 auto 2.5rem;font-size:.88rem}
+  .contact-icons{display:flex;gap:1.4rem;justify-content:center;align-items:center}
+  .ci{width:54px;height:54px;border-radius:50%;background:var(--surface);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;transition:all .35s;text-decoration:none;color:var(--text2)}
+  .ci:hover{border-color:var(--blue);color:var(--blue);transform:translateY(-5px) scale(1.1);box-shadow:0 10px 30px rgba(74,144,217,.15)}
+  .ci svg{width:22px;height:22px}
+
+  footer{text-align:center;padding:2rem;color:var(--text2);font-size:.7rem;border-top:1px solid var(--border)}
+
+  @media(max-width:900px){
+    .hero{grid-template-columns:1fr;min-height:auto}
+    .hero-left{padding:7rem 2rem 3rem}
+    .hero-right{height:50vh}
+    .hero-right .photo-overlay{background:linear-gradient(to top,var(--bg) 5%,transparent 40%)}
+  }
+  @media(max-width:768px){
+    nav ul{display:none}
+    nav{padding:.8rem 1.5rem}
+    .about-grid,.edu-grid,.skills-grid,.proj-grid{grid-template-columns:1fr}
+    .inv-grid{grid-template-columns:1fr}
+    .tl-item{grid-template-columns:1fr;gap:.4rem}
+    .tl-item::after{display:none}
+    .tl-date{text-align:left;padding-right:0}
+    .tl-body::before{display:none}
+    .tl-body{padding-left:0}
+    .tl-content{flex-direction:column}
+    .tl-img-sq{width:100%;height:auto;aspect-ratio:1/1;max-width:200px}
+    section{padding:3.5rem 1.5rem}
+    .hero-left{padding:6rem 1.5rem 2.5rem}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">qemal<span>.</span></div>
+  <ul>
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="pill r r-up">Open to co-op & internship opportunities</div>
+    <h1 class="r r-up d1">Electrical<br><span>Engineer</span></h1>
+    <div class="sub r r-up d2">Qemal Papraniku · Northeastern University '28</div>
+    <p class="r r-up d3">Passionate about hardware design, power systems, and embedded engineering. I love solving problems at every scale, from breadboard prototypes to production-ready systems.</p>
+    <div class="hero-btns r r-up d4">
+      <a href="#projects" class="btn btn-primary">View My Projects</a>
+      <a href="#contact" class="btn btn-ghost">Contact Me</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-slideshow" id="heroSlideshow">
+      <div class="hero-slide active"><img src="qpfp.JPG" alt="Qemal"></div>
+      <div class="hero-slide"><img src="skyblue.jpg" alt="Qemal"></div>
+      <div class="hero-slide"><img src="fambam.jpg" alt="Qemal"></div>
+      <div class="hero-slide"><img src="vaca.JPG" alt="Qemal"></div>
+      <div class="hero-slide"><img src="bruno2.jpg" alt="Qemal"></div>
+      <div class="hero-slide"><img src="skydi.JPG" alt="Qemal"></div>
+      <div class="hero-slide"><img src="grad.jpg" alt="Qemal"></div>
+    </div>
+    <div class="photo-overlay"></div>
+    <div class="hero-dots" id="heroDots"></div>
+  </div>
+  <div class="hero-stripe"></div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="alt">
+  <div class="container">
+    <div class="stag r r-up">About Me</div>
+    <div class="stitle r r-up d1">Engineer. Builder. Problem Solver.</div>
+    <div class="line-accent r r-up d2"></div>
+    <div class="about-grid">
+      <div class="about-text r r-up d2">
+        <p>I'm a second-year Electrical Engineering student at Northeastern University with a strong interest in hardware, whether that's power systems, embedded design, or hands-on circuit work. I've always had a passion for problem solving, no matter the scale, and I want to apply that drive throughout my career.</p>
+        <p>At Northeastern, I'm a member of IEEE where I've collaborated on multiple hands-on engineering projects. I'm also involved with Pi Kappa Phi Fraternity and the Albanian Student Association, which keep me connected to a diverse community of people and perspectives.</p>
+        <p>Outside of engineering, I enjoy trying new foods, traveling, and staying involved with my community. I grew up in Lodi, New Jersey, and those roots taught me the value of showing up and contributing wherever you can.</p>
+        <div class="chips">
+          <span class="chip"><b>Location:</b> Lodi, NJ / Boston, MA</span>
+          <span class="chip"><b>GPA:</b> 3.6 / 4.0</span>
+          <span class="chip"><b>Focus:</b> Hardware & Embedded</span>
+          <span class="chip"><b>Dean's List</b></span>
+        </div>
+      </div>
+      <div class="stats r r-right d3">
+        <div class="stat"><div class="n">3.6</div><div class="l">GPA</div></div>
+        <div class="stat"><div class="n">4+</div><div class="l">Projects</div></div>
+        <div class="stat"><div class="n">2nd</div><div class="l">Year</div></div>
+        <div class="stat"><div class="n">3+</div><div class="l">Orgs</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="container">
+    <div class="stag r r-up">Technical Skills</div>
+    <div class="stitle r r-up d1">What I Work With</div>
+    <div class="line-accent r r-up d1"></div>
+    <div class="sdesc r r-up d2">Tools, languages, and disciplines I bring to every project.</div>
+    <div class="skills-grid">
+      <div class="sk r r-up d1">
+        <h3>Embedded Systems</h3>
+        <p>Firmware development on Arduino platforms using C++. Sensor integration, real-time control logic, and hardware/software co-design for robotics and interactive devices.</p>
+        <div class="sk-tags"><span>C++</span><span>Arduino</span><span>Sensors</span><span>Serial</span></div>
+      </div>
+      <div class="sk r r-up d2">
+        <h3>Circuits & Signal Processing</h3>
+        <p>Analog circuit design, filter implementation, and signal conditioning. Built a working ECG using passive components and analyzed output with MATLAB.</p>
+        <div class="sk-tags"><span>Circuits</span><span>Filters</span><span>Oscilloscope</span><span>MATLAB</span></div>
+      </div>
+      <div class="sk r r-up d3">
+        <h3>Programming & Analysis</h3>
+        <p>Software development in C++, Python, and MATLAB for data analysis, control systems, and hardware interaction.</p>
+        <div class="sk-tags"><span>C++</span><span>Python</span><span>MATLAB</span></div>
+      </div>
+      <div class="sk r r-up d4">
+        <h3>CAD & Design Tools</h3>
+        <p>Proficient in AutoCAD and SolidWorks for mechanical and electrical design, enclosure modeling, and project documentation.</p>
+        <div class="sk-tags"><span>AutoCAD</span><span>SolidWorks</span><span>3D Printing</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects" class="alt">
+  <div class="container">
+    <div class="stag r r-up">Featured Projects</div>
+    <div class="stitle r r-up d1">Engineering in Action</div>
+    <div class="line-accent r r-up d1"></div>
+    <div class="sdesc r r-up d2">Hands-on builds from coursework, research, and personal exploration.</div>
+    <div class="proj-grid">
+
+      <div class="proj r r-up d1">
+        <div class="proj-carousel" data-carousel>
+          <div class="slide active" data-label="Circuit on breadboard"><img src="ecgcircuit.png" alt=""></div>
+          <div class="slide" data-label="Oscilloscope output"><img src="ecgo.png" alt=""></div>
+          <div class="slide" data-label="MATLAB plot"><img src="ecgmatlab.png" alt=""></div>
+          <div class="slide-label"></div>
+          <div class="proj-arrows"><button onclick="carouselNav(this,-1)">‹</button><button onclick="carouselNav(this,1)">›</button></div>
+          <div class="proj-dots"></div>
+        </div>
+        <div class="proj-body">
+          <h3>Breadboard ECG</h3>
+          <p>Recorded a live heartbeat signal using diodes and filtered it through low-pass and high-pass stages to produce a clean waveform on an oscilloscope. Plotted the results in MATLAB.</p>
+          <div class="proj-tags"><span>Analog</span><span>Filters</span><span>MATLAB</span><span>Oscilloscope</span></div>
+        </div>
+      </div>
+
+      <div class="proj r r-up d2">
+        <div class="proj-carousel" data-carousel>
+          <div class="slide active" data-label="Full device assembled"><img src="cognitivegamewhole.png" alt=""></div>
+          <div class="slide" data-label="Whack-a-Mole"><img src="whackamole.png" alt=""></div>
+          <div class="slide" data-label="Simon Says"><img src="simonsays.png" alt=""></div>
+          <div class="slide" data-label="Clock Game"><img src="clockgame.png" alt=""></div>
+          <div class="slide-label"></div>
+          <div class="proj-arrows"><button onclick="carouselNav(this,-1)">‹</button><button onclick="carouselNav(this,1)">›</button></div>
+          <div class="proj-dots"></div>
+        </div>
+        <div class="proj-body">
+          <h3>Cognitive Therapy Game</h3>
+          <p>Built an Arduino-based device with three mini-games: Simon Says, Whack-a-Mole, and a potentiometer clock puzzle. Designed hardware with LEDs, force sensors, LCD display, and a 3D-printed enclosure.</p>
+          <div class="proj-tags"><span>C++</span><span>Arduino</span><span>Sensors</span><span>3D Print</span></div>
+        </div>
+      </div>
+
+      <div class="proj r r-up d3">
+        <div class="proj-carousel" data-carousel>
+          <div class="slide active" data-label="Rover"><img src="rover2.png" alt=""></div>
+          <div class="slide" data-label="Rover with Obstacles"><img src="roverwhole.png" alt=""></div>
+          <div class="slide-label"></div>
+          <div class="proj-arrows"><button onclick="carouselNav(this,-1)">‹</button><button onclick="carouselNav(this,1)">›</button></div>
+          <div class="proj-dots"></div>
+        </div>
+        <div class="proj-body">
+          <h3>Self-Driving Rover</h3>
+          <p>Developed embedded C++ software for obstacle detection and dynamic navigation using distance sensors. Built laser-cut obstacles for testing and iterated with a team.</p>
+          <div class="proj-tags"><span>C++</span><span>Arduino</span><span>Sensors</span><span>Laser Cut</span></div>
+        </div>
+      </div>
+
+      <div class="proj r r-up d4">
+        <div class="proj-single">
+          <img src="njit.jpg" alt="NJIT Robotics Research">
+        </div>
+        <div class="proj-body">
+          <h3>NJIT Robotics Research</h3>
+          <p>Participated in a research internship focused on constructing and controlling robots using motors and switches. Engaged in weekly engineering discussions and hands-on prototyping.</p>
+          <div class="proj-tags"><span>Robotics</span><span>Motors</span><span>Research</span><span>Prototyping</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="container">
+    <div class="stag r r-up">Experience</div>
+    <div class="stitle r r-up d1">Where I've Contributed</div>
+    <div class="line-accent r r-up d1"></div>
+    <div class="tl">
+      <div class="tl-item r r-up">
+        <div class="tl-date">Jul — Aug 2025</div>
+        <div class="tl-body">
+          <h3>Warehouse & Systems Intern</h3>
+          <div class="co">Global Crossing Engineering & Consulting</div>
+          <div class="tl-content">
+            <div class="tl-text">
+              <p>Tracked inventory for medical and industrial supplies using barcode scanners and software systems. Troubleshot hardware issues with label printers, scanners, and workstations to minimize downtime. Built Excel-based tracking tools that improved purchasing visibility.</p>
+            </div>
+            <div class="tl-img-sq">
+              <img src="global.avif" alt="Global Crossing">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tl-item r r-up">
+        <div class="tl-date">Sep 2024 — Jan 2025</div>
+        <div class="tl-body">
+          <h3>Website Management Board</h3>
+          <div class="co">Northeastern University SGA</div>
+          <div class="tl-content">
+            <div class="tl-text">
+              <p>Oversaw design, development, and maintenance of the Student Government website used by 1,000+ students. Redesigned templates across 20+ pages to improve UI clarity and accessibility.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tl-item r r-up">
+        <div class="tl-date">Jun 2022 — Present</div>
+        <div class="tl-body">
+          <h3>Assistant Manager</h3>
+          <div class="co">Mr. Bruno's Pizzeria & Restaurant</div>
+          <div class="tl-content">
+            <div class="tl-text">
+              <p>Manage daily operations serving up to 200 customers. Handle payroll, vendor orders, and register systems. Contribute to marketing campaigns and third-party platform management.</p>
+            </div>
+            <div class="tl-img-sq">
+              <img src="mr_brunos.avif" alt="Mr. Bruno's">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education" class="alt">
+  <div class="container">
+    <div class="stag r r-up">Education</div>
+    <div class="stitle r r-up d1">Academic Foundation</div>
+    <div class="line-accent r r-up d1"></div>
+    <div class="edu-grid">
+      <div class="edu r r-up d1">
+        <div class="t">Current</div>
+        <h3>B.S. Electrical Engineering</h3>
+        <div class="s">Northeastern University · Boston, MA</div>
+        <div class="d">Expected May 2028 · GPA: 3.6/4.0</div>
+        <div class="ex">Circuits & Signals, Embedded Design Enabling Robotics, Fundamentals of Electronics, Fundamentals of Networks, Differential Equations & Linear Algebra</div>
+      </div>
+      <div class="edu r r-up d2">
+        <div class="t">Prior</div>
+        <h3>Felician University</h3>
+        <div class="s">Lodi, New Jersey</div>
+        <div class="d">Completed June 2024</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INVOLVEMENT -->
+<section>
+  <div class="container">
+    <div class="stag r r-up">Involvement</div>
+    <div class="stitle r r-up d1">Community & Organizations</div>
+    <div class="line-accent r r-up d1"></div>
+    <div class="inv-grid">
+      <div class="inv r r-up d1">
+        <div class="inv-img">
+          <!-- Replace with: <img src="ieee.jpg" alt="IEEE"> -->
+          <div class="ph"><img src="ieee.png" alt="IEEE"></div>
+        </div>
+        <div class="inv-body"><h3>Northeastern IEEE</h3><p>Member · Engineering projects</p></div>
+      </div>
+      <div class="inv r r-up d2">
+        <div class="inv-img">
+          <img src="pikapp.jpg" alt="Pi Kappa Phi">
+        </div>
+        <div class="inv-body"><h3>Pi Kappa Phi</h3><p>Fraternity Member</p></div>
+      </div>
+      <div class="inv r r-up d3">
+        <div class="inv-img">
+          <img src="asa.png" alt="Albanian Student Association">
+        </div>
+        <div class="inv-body"><h3>Albanian Student Association</h3><p>NEU Chapter Member</p></div>
+      </div>
+      <div class="inv r r-up d4">
+        <div class="inv-img">
+          <!-- Replace with: <img src="xhamia.jpg" alt="Xhamia Dibra"> -->
+          <div class="ph"><img src="dcc.png" alt="Xhamia Dibra"></div>
+        </div>
+        <div class="inv-body"><h3>Xhamia Dibra</h3><p>Volunteer · 2021–2024</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="contact-section alt">
+  <div class="container">
+    <div class="stag r r-up">Contact</div>
+    <div class="stitle r r-up d1">Let's Connect</div>
+    <div class="line-accent r r-up d1" style="margin:1rem auto 1.5rem"></div>
+    <p class="r r-up d2">Currently looking for co-op and internship opportunities in electrical engineering.</p>
+    <div class="contact-icons r r-up d3">
+      <a href="javascript:void(0)" class="ci" title="Email" onclick="showPopup('Email','qemalpaps@gmail.com')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+      </a>
+      <a href="javascript:void(0)" class="ci" title="Phone" onclick="showPopup('Phone','973-816-9922')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      </a>
+      <a href="https://www.linkedin.com/in/qemal-papraniku-93702b285/" target="_blank" class="ci" title="LinkedIn">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.47 2H3.53A1.45 1.45 0 0 0 2 3.47v17.06A1.45 1.45 0 0 0 3.47 22h17.06A1.45 1.45 0 0 0 22 20.53V3.47A1.45 1.45 0 0 0 20.47 2zM8.09 18.74h-3v-9h3v9zM6.59 8.48a1.56 1.56 0 1 1 0-3.12 1.56 1.56 0 1 1 0 3.12zM18.91 18.74h-3v-4.26c0-1.08-.43-1.81-1.44-1.81a1.44 1.44 0 0 0-1.35.96 1.72 1.72 0 0 0-.09.65v4.46h-3v-9h2.9v1.3a2.88 2.88 0 0 1 2.62-1.45c1.91 0 3.36 1.25 3.36 3.94v5.21z"/></svg>
+      </a>
+      <a href="https://docs.google.com/document/d/1oaF36Q22IkFMiAiterVRzYm-9O3el29pJzmgyWzO4Y4/edit?usp=sharing" target="_blank" class="ci" title="Resume">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="copy-overlay" id="copyOverlay" onclick="closePopup()"></div>
+<div class="copy-popup" id="copyPopup">
+  <button class="pop-close" onclick="closePopup()">×</button>
+  <div class="pop-label" id="popLabel"></div>
+  <div class="pop-value" id="popValue"></div>
+  <button onclick="copyValue()">Copy to Clipboard</button>
+  <div class="copied" id="copiedMsg">Copied!</div>
+</div>
+
+<footer><p>© 2026 Qemal Papraniku</p></footer>
+
+<script>
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('v');io.unobserve(e.target)}})
+},{threshold:.1,rootMargin:'0px 0px -50px 0px'});
+document.querySelectorAll('.r').forEach(el=>io.observe(el));
+
+const nav = document.querySelector('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',window.scrollY>30));
+
+(function(){
+  const ss = document.getElementById('heroSlideshow');
+  const slides = ss.querySelectorAll('.hero-slide');
+  const dotsBox = document.getElementById('heroDots');
+  let cur = 0;
+  slides.forEach((_,i)=>{
+    const d = document.createElement('button');
+    if(i===0) d.classList.add('active');
+    d.addEventListener('click',()=>goTo(i));
+    dotsBox.appendChild(d);
+  });
+  const dots = dotsBox.querySelectorAll('button');
+  function goTo(n){
+    slides[cur].classList.remove('active');
+    dots[cur].classList.remove('active');
+    cur = n;
+    slides[cur].classList.add('active');
+    dots[cur].classList.add('active');
+  }
+  setInterval(()=>goTo((cur+1)%slides.length),4000);
+})();
+
+document.querySelectorAll('[data-carousel]').forEach(c=>{
+  const slides = c.querySelectorAll('.slide');
+  const labelEl = c.querySelector('.slide-label');
+  const dotsBox = c.querySelector('.proj-dots');
+  let cur = 0;
+  slides.forEach((_,i)=>{
+    const d = document.createElement('span');
+    if(i===0) d.classList.add('active');
+    dotsBox.appendChild(d);
+  });
+  const dots = dotsBox.querySelectorAll('span');
+  function show(n){
+    slides[cur].classList.remove('active');
+    dots[cur].classList.remove('active');
+    cur = ((n % slides.length) + slides.length) % slides.length;
+    slides[cur].classList.add('active');
+    dots[cur].classList.add('active');
+    labelEl.textContent = slides[cur].getAttribute('data-label') || '';
+  }
+  labelEl.textContent = slides[0].getAttribute('data-label') || '';
+  c._show = show;
+  c._cur = ()=> cur;
+});
+
+function carouselNav(btn, dir){
+  const c = btn.closest('[data-carousel]');
+  c._show(c._cur() + dir);
+}
+
+// Copy popup
+function showPopup(label, value){
+  document.getElementById('popLabel').textContent = label;
+  document.getElementById('popValue').textContent = value;
+  document.getElementById('copiedMsg').classList.remove('show');
+  document.getElementById('copyPopup').classList.add('show');
+  document.getElementById('copyOverlay').classList.add('show');
+}
+function closePopup(){
+  document.getElementById('copyPopup').classList.remove('show');
+  document.getElementById('copyOverlay').classList.remove('show');
+}
+function copyValue(){
+  const v = document.getElementById('popValue').textContent;
+  navigator.clipboard.writeText(v).then(()=>{
+    document.getElementById('copiedMsg').classList.add('show');
+    setTimeout(()=>document.getElementById('copiedMsg').classList.remove('show'),2000);
+  });
+}
+</script>
+</body>
+</html>
